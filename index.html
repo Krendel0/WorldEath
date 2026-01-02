@@ -6,6 +6,7 @@
     <title>World | Земля - Премиум подписка</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Базовые стили */
         * {
             margin: 0;
             padding: 0;
@@ -13,19 +14,335 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
+        :root {
+            --primary-dark: #0a1931;
+            --primary-blue: #1a3a5f;
+            --secondary-blue: #2d5a8c;
+            --accent-cyan: #4cc9f0;
+            --accent-purple: #4361ee;
+            --accent-green: #4ade80;
+            --accent-yellow: #ffd166;
+            --text-light: #ffffff;
+            --text-muted: #a5d8ff;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --card-bg: rgba(26, 58, 95, 0.8);
+        }
+
+        /* СВЕТЛАЯ ТЕМА - УЛУЧШЕННАЯ */
+        [data-theme="light"] {
+            --primary-dark: #ffffff;
+            --primary-blue: #f8fafc;
+            --secondary-blue: #f1f5f9;
+            --accent-cyan: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --text-light: #1e293b;
+            --text-muted: #64748b;
+            --shadow-dark: rgba(0, 0, 0, 0.08);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            
+            /* Градиенты для светлой темы */
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 30%, #f1f5f9 100%);
+        }
+
+        /* Серая тема */
+        [data-theme="gray"] {
+            --primary-dark: #374151;
+            --primary-blue: #4b5563;
+            --secondary-blue: #6b7280;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #7c3aed;
+            --accent-green: #059669;
+            --accent-yellow: #d97706;
+            --text-light: #f9fafb;
+            --text-muted: #d1d5db;
+            --shadow-dark: rgba(0, 0, 0, 0.4);
+            --card-bg: rgba(55, 65, 81, 0.9);
+        }
+
         body {
-            background: linear-gradient(135deg, #0a1931 0%, #1a3a5f 30%, #2d5a8c 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 30%, var(--secondary-blue) 100%);
+            color: var(--text-light);
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
+            transition: all 0.3s ease;
         }
 
+        /* Контейнер */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             width: 100%;
+        }
+
+        /* Панель управления */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .control-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-cyan);
+            color: var(--text-light);
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px var(--shadow-dark);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.2);
+            border-color: var(--accent-purple);
+        }
+
+        /* Меню настроек */
+        .settings-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: var(--card-bg);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 20px;
+            padding: 25px;
+            min-width: 320px;
+            box-shadow: 0 10px 40px var(--shadow-dark);
+            display: none;
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+        }
+
+        .settings-menu.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+        }
+
+        /* Выбор темы - УЛУЧШЕННЫЙ */
+        .theme-selector {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .theme-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            width: 100px;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .theme-option.active {
+            border-color: var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-option.active .theme-preview {
+            border-color: var(--accent-cyan);
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Темная тема */
+        .theme-dark .theme-preview {
+            background: linear-gradient(135deg, #0a1931, #1a3a5f);
+            color: #4cc9f0;
+        }
+
+        /* Светлая тема - УЛУЧШЕННАЯ */
+        .theme-light .theme-preview {
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            color: #3b82f6;
+            border-color: #cbd5e1;
+        }
+
+        /* Серая тема */
+        .theme-gray .theme-preview {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: #06b6d4;
+        }
+
+        .theme-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Выбор языка - УЛУЧШЕННЫЙ С ЧЕТКИМИ ИКОНКАМИ */
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .language-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            width: 90px;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+
+        .language-option:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .language-option.active {
+            border-color: var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .language-preview {
+            width: 60px;
+            height: 45px; /* Фиксированная высота для четкости */
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: white; /* Белый фон для четкости флагов */
+        }
+
+        .language-option.active .language-preview {
+            border-color: var(--accent-cyan);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+
+        /* ЧЕТКИЕ ИКОНКИ ЯЗЫКОВ */
+        .flag-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+        /* Для светлой темы делаем флаги еще четче */
+        [data-theme="light"] .flag-icon {
+            filter: brightness(1) contrast(1.2);
+        }
+
+        .language-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Кнопка закрытия */
+        .close-settings {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid var(--accent-cyan);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-settings:hover {
+            background: var(--accent-cyan);
+            color: white;
+            transform: rotate(90deg);
         }
 
         /* Навигация */
@@ -35,7 +352,7 @@
             align-items: center;
             padding: 20px 0;
             margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.1);
             flex-wrap: wrap;
             gap: 20px;
         }
@@ -50,44 +367,53 @@
 
         .logo-icon {
             font-size: 2.5rem;
-            color: #4cc9f0;
+            color: var(--accent-cyan);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
         }
 
         .logo-text {
             font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(to right, #4cc9f0, #4361ee);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
+            letter-spacing: 0.5px;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 25px;
             align-items: center;
             flex-wrap: wrap;
         }
 
         .nav-link {
-            color: #a5d8ff;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 1.1rem;
-            transition: color 0.3s;
-            padding: 10px 15px;
-            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 12px;
             white-space: nowrap;
         }
 
         .nav-link:hover {
-            color: #4cc9f0;
-            background: rgba(76, 201, 240, 0.1);
+            color: var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
         }
 
         .nav-link.active {
-            color: #4cc9f0;
-            background: rgba(76, 201, 240, 0.1);
-            border: 1px solid rgba(76, 201, 240, 0.3);
+            color: var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.15);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
         }
 
         /* Баннер сервера */
@@ -97,9 +423,13 @@
             border-radius: 20px;
             overflow: hidden;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px var(--shadow-dark);
+            border: 3px solid rgba(59, 130, 246, 0.1);
             width: 100%;
+        }
+
+        [data-theme="light"] .server-banner {
+            border: 3px solid rgba(59, 130, 246, 0.2);
         }
 
         .banner-image {
@@ -114,22 +444,27 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
             padding: 30px;
             display: flex;
             align-items: center;
             gap: 25px;
             flex-wrap: wrap;
+            backdrop-filter: blur(5px);
+        }
+
+        [data-theme="light"] .server-info {
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
         }
 
         .server-avatar {
             width: 120px;
             height: 120px;
             border-radius: 20px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.3);
             object-fit: cover;
-            background-color: #1a3a5f;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background: var(--card-bg);
+            box-shadow: 0 8px 25px var(--shadow-dark);
             flex-shrink: 0;
         }
 
@@ -141,48 +476,97 @@
         .server-details h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
-            background: linear-gradient(to right, #ffffff, #a5d8ff);
+            background: linear-gradient(135deg, var(--text-light), var(--accent-cyan));
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            line-height: 1.1;
         }
 
         .server-description {
             font-size: 1.2rem;
-            color: #a5d8ff;
+            color: var(--text-muted);
             max-width: 600px;
             margin-top: 10px;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-            word-wrap: break-word;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Преимущества */
+        .benefits-section {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 50px;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 15px 35px var(--shadow-dark);
+            width: 100%;
+        }
+
+        .benefits-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid var(--accent-purple);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent-cyan);
+        }
+
+        .benefit-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
         /* Страницы */
         .page {
             display: none;
-            animation: fadeIn 0.5s ease forwards;
             width: 100%;
         }
 
         .page.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
 
         @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(10px);
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            to { 
-                opacity: 1; 
+            to {
+                opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Основной контент главной страницы */
+        /* Карточки тарифов */
         .donation-tiers {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -192,7 +576,7 @@
         }
 
         .tier-card {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 30px;
             text-align: center;
@@ -200,24 +584,36 @@
             border: 2px solid transparent;
             backdrop-filter: blur(10px);
             position: relative;
-            overflow: visible;
-            background: linear-gradient(145deg, rgba(26, 58, 95, 0.8), rgba(10, 25, 49, 0.8));
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            cursor: pointer;
         }
 
         .tier-card:hover {
             transform: translateY(-10px);
-            border-color: #4361ee;
-            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.3);
+            border-color: var(--accent-purple);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .tier-card.selected {
+            border-color: var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.1);
+            animation: cardPulse 2s infinite;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 10px 35px rgba(59, 130, 246, 0.4);
+            }
         }
 
         .tier-card.popular {
-            border-color: #ffd700;
+            border-color: var(--accent-yellow);
             transform: scale(1.02);
-            background: linear-gradient(145deg, rgba(45, 90, 140, 0.9), rgba(26, 58, 95, 0.9));
-            z-index: 1;
+            background: linear-gradient(145deg, var(--card-bg), rgba(245, 158, 11, 0.1));
         }
 
         .tier-card.popular:hover {
@@ -228,49 +624,46 @@
             position: absolute;
             top: 20px;
             right: -35px;
-            background: linear-gradient(45deg, #ffd700, #ff9500);
-            color: #000;
+            background: linear-gradient(135deg, var(--accent-yellow), #d97706);
+            color: #1e293b;
             padding: 8px 40px;
             transform: rotate(45deg);
-            font-weight: bold;
+            font-weight: 800;
             font-size: 0.9rem;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 2;
             white-space: nowrap;
+            letter-spacing: 1px;
         }
 
         .tier-icon {
             font-size: 3.5rem;
             margin-bottom: 20px;
-            color: #4cc9f0;
-            display: inline-block;
+            color: var(--accent-cyan);
         }
 
         .tier-card h3 {
             font-size: 2.2rem;
             margin-bottom: 10px;
-            color: #72efdd;
-            line-height: 1.2;
+            color: var(--accent-cyan);
         }
 
         .tier-duration {
             font-size: 1.3rem;
-            color: #a5d8ff;
+            color: var(--text-muted);
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .tier-price {
             font-size: 3.5rem;
-            font-weight: bold;
+            font-weight: 800;
             margin: 20px 0;
-            color: #ffd166;
-            text-shadow: 0 2px 10px rgba(255, 209, 102, 0.3);
-            background: linear-gradient(to right, #ffd166, #ff9500);
+            background: linear-gradient(135deg, var(--accent-yellow), #d97706);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            line-height: 1;
-            word-break: break-word;
+            letter-spacing: -1px;
         }
 
         .tier-features {
@@ -286,67 +679,76 @@
             position: relative;
             font-size: 1rem;
             line-height: 1.4;
+            color: var(--text-light);
         }
 
         .tier-features li:before {
             content: "✓";
             position: absolute;
             left: 0;
-            color: #4ade80;
+            color: var(--accent-green);
             font-weight: bold;
             font-size: 1.2rem;
         }
 
         .btn-tier {
-            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
             color: white;
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
             width: 100%;
             margin-top: 15px;
-            padding: 15px;
+            padding: 16px;
             border-radius: 50px;
             border: none;
             font-size: 1.1rem;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            display: block;
+            letter-spacing: 0.5px;
         }
 
         .btn-tier:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
+            box-shadow: 0 12px 25px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
         }
 
-        /* Выбор оплаты */
+        /* Платежная секция */
         .payment-section {
-            background: linear-gradient(145deg, rgba(26, 58, 95, 0.8), rgba(10, 25, 49, 0.8));
+            background: var(--card-bg);
             border-radius: 25px;
             padding: 40px;
             margin-bottom: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 15px 35px var(--shadow-dark);
             width: 100%;
-            box-sizing: border-box;
-            overflow: hidden;
         }
 
         .selected-tier-info {
-            background: rgba(67, 97, 238, 0.1);
-            border-radius: 15px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 20px;
+            padding: 25px;
             margin-bottom: 30px;
             text-align: center;
-            border: 2px solid #4361ee;
+            border: 2px solid var(--accent-purple);
             display: none;
-            background: linear-gradient(145deg, rgba(67, 97, 238, 0.2), rgba(58, 12, 163, 0.2));
-            width: 100%;
-            box-sizing: border-box;
+            backdrop-filter: blur(10px);
         }
 
         .selected-tier-info.show {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .payment-options {
@@ -357,38 +759,35 @@
         }
 
         .payment-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 30px;
             text-align: center;
             transition: all 0.3s;
             border: 2px solid transparent;
             cursor: pointer;
-            background: linear-gradient(145deg, rgba(45, 90, 140, 0.8), rgba(26, 58, 95, 0.8));
-            width: 100%;
-            box-sizing: border-box;
-            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .payment-card:hover {
-            border-color: #4361ee;
-            background: rgba(67, 97, 238, 0.1);
+            border-color: var(--accent-purple);
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .payment-card.selected {
-            border-color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
             transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
         }
 
         .payment-card.boosty {
-            border-color: #ff5a5f;
+            border-color: #ff6b6b;
         }
 
         .payment-card.monobank {
-            border-color: #fcee21;
+            border-color: #ffd93d;
         }
 
         .payment-icon {
@@ -399,11 +798,10 @@
             align-items: center;
             gap: 15px;
             flex-wrap: wrap;
-            overflow: hidden;
         }
 
         .boosty .payment-icon {
-            color: #ff5a5f;
+            color: #ff6b6b;
         }
 
         .boosty-icon {
@@ -416,50 +814,49 @@
 
         .boosty-ruble {
             font-size: 3.5rem;
-            color: #ff5a5f;
+            color: #ff6b6b;
             margin-bottom: 10px;
-            text-shadow: 0 3px 10px rgba(255, 90, 95, 0.3);
-            line-height: 1;
         }
 
         .boosty-text {
             font-size: 1.3rem;
-            font-weight: bold;
-            color: #ff5a5f;
-            background: linear-gradient(45deg, #ff5a5f, #ff9500);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #ff8787);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            padding: 5px 15px;
-            border-radius: 10px;
-            background-color: rgba(255, 90, 95, 0.1);
+            padding: 8px 20px;
+            border-radius: 12px;
+            background-color: rgba(255, 107, 107, 0.1);
             display: inline-block;
+            border: 2px solid rgba(255, 107, 107, 0.3);
         }
 
         .monobank .payment-icon {
-            color: #fcee21;
+            color: #ffd93d;
         }
 
         .payment-card h3 {
             font-size: 2rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, #ffffff, #a5d8ff);
+            color: var(--accent-cyan);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--text-light));
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            line-height: 1.2;
         }
 
         .payment-card p {
             margin-bottom: 25px;
-            opacity: 0.9;
-            line-height: 1.5;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 1.05rem;
         }
 
         .pay-btn {
-            background: linear-gradient(to right, #4ade80, #22c55e);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
             color: white;
-            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
             font-size: 1.2rem;
             padding: 18px 50px;
             margin-top: 20px;
@@ -468,41 +865,40 @@
             cursor: pointer;
             transition: all 0.3s;
             display: none;
-            position: relative;
-            overflow: hidden;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .pay-btn.show {
             display: inline-block;
-            animation: pulse 2s infinite ease-in-out;
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% { 
                 transform: scale(1); 
-                box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+                box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
             }
             50% { 
                 transform: scale(1.05); 
-                box-shadow: 0 8px 25px rgba(74, 222, 128, 0.6);
+                box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
             }
             100% { 
                 transform: scale(1); 
-                box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+                box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
             }
         }
 
         /* Социальные сети */
         .social-section {
-            background: linear-gradient(145deg, rgba(26, 58, 95, 0.8), rgba(10, 25, 49, 0.8));
+            background: var(--card-bg);
             border-radius: 25px;
             padding: 50px;
             margin: 50px 0;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 15px 35px var(--shadow-dark);
             text-align: center;
             width: 100%;
-            box-sizing: border-box;
         }
 
         .social-links {
@@ -515,7 +911,7 @@
         }
 
         .social-card {
-            background: linear-gradient(145deg, rgba(45, 90, 140, 0.8), rgba(26, 58, 95, 0.8));
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 35px;
             width: 220px;
@@ -525,110 +921,46 @@
             text-decoration: none;
             color: white;
             flex-shrink: 0;
-            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-dark);
         }
 
         .social-card:hover {
             transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         .social-card.discord {
-            background: linear-gradient(145deg, #5865F2, #4752c4);
+            background: linear-gradient(135deg, #5865F2, #7289da);
             border-color: #5865F2;
         }
 
-        .social-card.discord:hover {
-            border-color: #ffffff;
-            box-shadow: 0 15px 30px rgba(88, 101, 242, 0.5);
-        }
-
         .social-card.telegram {
-            background: linear-gradient(145deg, #26A5E4, #1e8bc3);
+            background: linear-gradient(135deg, #26A5E4, #0088cc);
             border-color: #26A5E4;
         }
 
-        .social-card.telegram:hover {
-            border-color: #ffffff;
-            box-shadow: 0 15px 30px rgba(38, 165, 228, 0.5);
-        }
-
         .social-card.tiktok {
-            background: linear-gradient(145deg, #000000, #333333);
+            background: linear-gradient(135deg, #000000, #333333);
             border-color: #ff0050;
-        }
-
-        .social-card.tiktok:hover {
-            border-color: #ffffff;
-            box-shadow: 0 15px 30px rgba(255, 0, 80, 0.5);
         }
 
         .social-icon {
             font-size: 4.5rem;
             margin-bottom: 20px;
             display: block;
-            line-height: 1;
         }
 
         .social-card h3 {
             font-size: 1.8rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, #ffffff, #a5d8ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1.2;
+            color: white;
         }
 
         .social-card p {
             font-size: 1rem;
             opacity: 0.9;
             line-height: 1.4;
-        }
-
-        /* Преимущества */
-        .benefits-section {
-            margin-bottom: 40px;
-            width: 100%;
-        }
-
-        .benefits-section h2 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #72efdd;
-            line-height: 1.2;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .benefit-card {
-            background: linear-gradient(145deg, rgba(26, 58, 95, 0.8), rgba(10, 25, 49, 0.8));
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
-            overflow: hidden;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .benefit-card h4 {
-            color: #4cc9f0;
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-            line-height: 1.3;
-        }
-
-        .benefit-card p {
-            color: #a5d8ff;
-            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* Футер */
@@ -636,33 +968,25 @@
             text-align: center;
             padding: 40px 20px;
             margin-top: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: linear-gradient(to bottom, rgba(10, 25, 49, 0.8), rgba(26, 58, 95, 0.8));
-            border-radius: 20px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            border-top: 2px solid rgba(59, 130, 246, 0.1);
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: 0 -10px 30px var(--shadow-dark);
             width: 100%;
-            box-sizing: border-box;
-        }
-
-        .copyright {
-            margin-bottom: 15px;
-            font-size: 1rem;
-            color: #a5d8ff;
-            line-height: 1.5;
         }
 
         .site-info {
             margin-top: 30px;
             font-size: 0.95rem;
-            color: #a5d8ff;
+            color: var(--text-muted);
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid #4cc9f0;
-            background: linear-gradient(145deg, rgba(45, 90, 140, 0.5), rgba(26, 58, 95, 0.5));
-            line-height: 1.6;
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent-cyan);
+            background: rgba(59, 130, 246, 0.1);
+            line-height: 1.7;
         }
 
         .security-note {
@@ -671,8 +995,9 @@
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
-            color: #4ade80;
+            color: var(--accent-green);
             font-size: 1.1rem;
+            font-weight: 600;
             flex-wrap: wrap;
         }
 
@@ -685,9 +1010,9 @@
         }
 
         .footer-social a {
-            color: white;
+            color: var(--text-light);
             font-size: 2rem;
-            transition: transform 0.3s, color 0.3s;
+            transition: all 0.3s;
             text-decoration: none;
             width: 60px;
             height: 60px;
@@ -695,22 +1020,23 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid transparent;
         }
 
         .footer-social a:hover {
-            transform: scale(1.2);
+            transform: scale(1.2) rotate(10deg);
+            background: var(--accent-cyan);
+            color: white;
+            border-color: var(--accent-cyan);
         }
 
         .footer-social .discord:hover {
             background: #5865F2;
-            color: white;
         }
 
         .footer-social .telegram:hover {
             background: #26A5E4;
-            color: white;
         }
 
         .footer-social .tiktok:hover {
@@ -723,120 +1049,106 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease forwards;
+            padding: 20px 30px;
+            border-radius: 15px;
+            z-index: 1002;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            animation: slideInRight 0.3s ease forwards;
             max-width: 400px;
             border-left: 5px solid;
-            display: none;
-            box-sizing: border-box;
-            word-wrap: break-word;
+            background: var(--card-bg);
+            color: var(--text-light);
+            backdrop-filter: blur(10px);
+            border: 2px solid;
+            font-weight: 600;
         }
 
         .notification.success {
-            background: rgba(34, 197, 94, 0.9);
-            border-color: #16a34a;
-            display: block;
+            border-color: var(--accent-green);
+            border-left-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.9);
         }
 
         .notification.error {
+            border-color: #ef4444;
+            border-left-color: #ef4444;
             background: rgba(239, 68, 68, 0.9);
-            border-color: #dc2626;
-            display: block;
         }
 
         .notification.info {
+            border-color: var(--accent-cyan);
+            border-left-color: var(--accent-cyan);
             background: rgba(59, 130, 246, 0.9);
-            border-color: #2563eb;
-            display: block;
         }
 
-        @keyframes slideIn {
-            from { 
-                transform: translateX(100%); 
-                opacity: 0; 
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
-            to { 
-                transform: translateX(0); 
-                opacity: 1; 
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
         }
 
-        @keyframes slideOut {
-            from { 
-                transform: translateX(0); 
-                opacity: 1; 
+        /* Адаптация */
+        @media (max-width: 768px) {
+            .control-panel {
+                top: 10px;
+                right: 10px;
             }
-            to { 
-                transform: translateX(100%); 
-                opacity: 0; 
+            
+            .control-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
             }
-        }
-
-        /* Заголовки страниц */
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #72efdd;
-            line-height: 1.2;
-            word-wrap: break-word;
-        }
-
-        /* Адаптация для мобильных */
-        @media (max-width: 1200px) {
-            .container {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .server-info {
-                flex-direction: column;
-                text-align: center;
+            
+            .settings-menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: 0;
+                border-radius: 0;
+                min-width: auto;
+                overflow-y: auto;
                 padding: 20px;
+            }
+            
+            .theme-selector,
+            .language-selector {
+                justify-content: center;
                 gap: 15px;
             }
             
-            .server-details h1 {
-                font-size: 2.2rem;
+            .theme-option,
+            .language-option {
+                width: 85px;
+                padding: 12px;
             }
             
-            .server-description {
-                font-size: 1rem;
+            .theme-preview {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
             }
             
-            .tier-card.popular {
-                transform: none;
+            .language-preview {
+                width: 50px;
+                height: 35px;
             }
             
-            .tier-card.popular:hover {
-                transform: translateY(-10px);
-            }
-            
-            .popular-badge {
-                padding: 6px 30px;
-                font-size: 0.8rem;
-                right: -30px;
-            }
-        }
-
-        @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
-                gap: 15px;
-                padding: 15px 0;
+                text-align: center;
+                padding-top: 80px;
             }
             
             .nav-links {
-                gap: 15px;
                 justify-content: center;
-            }
-            
-            .nav-link {
-                padding: 8px 12px;
-                font-size: 1rem;
+                gap: 10px;
             }
             
             .server-banner {
@@ -849,18 +1161,31 @@
             }
             
             .server-details h1 {
+                font-size: 2rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .benefits-section {
+                padding: 25px;
+            }
+            
+            .benefits-section h2 {
                 font-size: 1.8rem;
             }
             
             .donation-tiers {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 25px;
             }
             
             .social-links {
                 flex-direction: column;
                 align-items: center;
-                gap: 20px;
+                gap: 25px;
             }
             
             .social-card {
@@ -872,114 +1197,90 @@
             .payment-section, .social-section {
                 padding: 25px;
             }
-            
-            .payment-options {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .tier-price {
-                font-size: 3rem;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .footer-social {
-                gap: 15px;
-            }
-            
-            .footer-social a {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-            
-            h2 {
-                font-size: 2rem;
-                margin-bottom: 20px;
-            }
-            
-            .pay-btn {
-                padding: 15px 30px;
-                font-size: 1.1rem;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo-text {
-                font-size: 1.5rem;
-            }
-            
-            .logo-icon {
-                font-size: 2rem;
-            }
-            
-            .server-details h1 {
-                font-size: 1.5rem;
-            }
-            
-            .server-description {
-                font-size: 0.9rem;
-            }
-            
-            .tier-card {
-                padding: 20px;
-            }
-            
-            .tier-price {
-                font-size: 2.5rem;
-            }
-            
-            .payment-card {
-                padding: 20px;
-            }
-            
-            .payment-icon {
-                font-size: 3rem;
-            }
-            
-            .boosty-ruble {
-                font-size: 2.5rem;
-            }
-            
-            .boosty-text {
-                font-size: 1rem;
-            }
-            
-            .notification {
-                max-width: calc(100% - 40px);
-                right: 10px;
-                left: 10px;
-            }
-            
-            .popular-badge {
-                padding: 4px 20px;
-                font-size: 0.7rem;
-                right: -25px;
-                top: 15px;
-            }
-        }
-
-        /* Исправления для overflow */
-        html {
-            overflow-x: hidden;
-        }
-
-        * {
-            max-width: 100%;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+    <!-- Панель управления -->
+    <div class="control-panel">
+        <button class="control-btn" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i>
+            <span data-translate="settings">Настройки</span>
+        </button>
+        
+        <div class="settings-menu" id="settingsMenu">
+            <button class="close-settings" onclick="toggleSettings()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-palette"></i> <span data-translate="theme">Тема оформления</span></h3>
+                <div class="theme-selector">
+                    <div class="theme-option theme-dark active" onclick="setTheme('dark')">
+                        <div class="theme-preview">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <span class="theme-name" data-translate="theme.dark">Темная</span>
+                    </div>
+                    
+                    <div class="theme-option theme-light" onclick="setTheme('light')">
+                        <div class="theme-preview">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <span class="theme-name" data-translate="theme.light">Светлая</span>
+                    </div>
+                    
+                    <div class="theme-option theme-gray" onclick="setTheme('gray')">
+                        <div class="theme-preview">
+                            <i class="fas fa-adjust"></i>
+                        </div>
+                        <span class="theme-name" data-translate="theme.gray">Серая</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3><i class="fas fa-language"></i> <span data-translate="language">Язык</span></h3>
+                <div class="language-selector">
+                    <a href="#" class="language-option active" onclick="setLanguage('ru')">
+                        <div class="language-preview">
+                            <img src="https://flagcdn.com/w40/ru.png" alt="RU" class="flag-icon">
+                        </div>
+                        <span class="language-name" data-translate="language.ru">Русский</span>
+                    </a>
+                    
+                    <a href="#" class="language-option" onclick="setLanguage('uk')">
+                        <div class="language-preview">
+                            <img src="https://flagcdn.com/w40/ua.png" alt="UA" class="flag-icon">
+                        </div>
+                        <span class="language-name" data-translate="language.uk">Українська</span>
+                    </a>
+                    
+                    <a href="#" class="language-option" onclick="setLanguage('en')">
+                        <div class="language-preview">
+                            <img src="https://flagcdn.com/w40/gb.png" alt="EN" class="flag-icon">
+                        </div>
+                        <span class="language-name" data-translate="language.en">English</span>
+                    </a>
+                    
+                    <a href="#" class="language-option" onclick="setLanguage('kz')">
+                        <div class="language-preview">
+                            <img src="https://flagcdn.com/w40/kz.png" alt="KZ" class="flag-icon">
+                        </div>
+                        <span class="language-name" data-translate="language.kz">Қазақша</span>
+                    </a>
+                    
+                    <a href="#" class="language-option" onclick="setLanguage('by')">
+                        <div class="language-preview">
+                            <img src="https://flagcdn.com/w40/by.png" alt="BY" class="flag-icon">
+                        </div>
+                        <span class="language-name" data-translate="language.by">Беларуская</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Навигация -->
         <nav class="navbar">
@@ -989,13 +1290,13 @@
             </a>
             
             <div class="nav-links">
-                <a href="#" class="nav-link active" onclick="showPage('home')">
+                <a href="#" class="nav-link active" onclick="showPage('home')" data-translate="nav.home">
                     <i class="fas fa-home"></i> Главная
                 </a>
-                <a href="#" class="nav-link" onclick="showPage('donate')">
+                <a href="#" class="nav-link" onclick="showPage('donate')" data-translate="nav.donate">
                     <i class="fas fa-crown"></i> Подписка
                 </a>
-                <a href="#" class="nav-link" onclick="showPage('social')">
+                <a href="#" class="nav-link" onclick="showPage('social')" data-translate="nav.social">
                     <i class="fas fa-users"></i> Сообщество
                 </a>
             </div>
@@ -1003,78 +1304,57 @@
 
         <!-- Главная страница -->
         <div class="page active" id="home-page">
-            <!-- Баннер и аватар сервера -->
+            <!-- Баннер сервера -->
             <div class="server-banner">
-                <img src="https://i.postimg.cc/HkZYKw5m/photo-2025-11-21-20-47-00.jpg" class="banner-image">
+                <img src="https://i.postimg.cc/HkZYKw5m/photo-2025-11-21-20-47-00.jpg" class="banner-image" alt="World | Земля">
                 <div class="server-info">
-                    <img src="https://i.postimg.cc/pLqrvNwJ/Countryballs.png" class="server-avatar">
+                    <img src="https://i.postimg.cc/pLqrvNwJ/Countryballs.png" class="server-avatar" alt="Server Avatar">
                     <div class="server-details">
-                        <h1>World | Земля</h1>
-                        <p class="server-description">
+                        <h1 data-translate="server.name">World | Земля</h1>
+                        <p class="server-description" data-translate="server.description">
                             🌍 World | Земля - Сервер в жанре "ВПИ", с адекватной администрацией, индивидуальный стиль, и идея. Мы тебя ждем!! ✨
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Преимущества доната -->
+            <!-- Преимущества -->
             <section class="benefits-section">
-                <h2><i class="fas fa-gift"></i> Преимущества премиум подписки Astra</h2>
+                <h2 data-translate="benefits.title"><i class="fas fa-gift"></i> Преимущества премиум подписки Astra</h2>
                 <div class="benefits-grid">
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-headset"></i>
-                        </div>
-                        <h4>1. Priority Support</h4>
-                        <p>Моментальные ответы от персонала — твои обращения всегда в приоритете.</p>
+                        <h4 data-translate="benefits.1.title">1. Приоритетная поддержка</h4>
+                        <p data-translate="benefits.1.description">Моментальные ответы от персонала — твои обращения всегда в приоритете.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-earlybirds"></i>
-                        </div>
-                        <h4>2. Early Access</h4>
-                        <p>После вайпа именно ты первым выбираешь страну и начинаешь путь к вершине.</p>
+                        <h4 data-translate="benefits.2.title">2. Ранний доступ</h4>
+                        <p data-translate="benefits.2.description">После вайпа именно ты первым выбираешь страну и начинаешь путь к вершине.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <h4>3. Starting Bonus</h4>
-                        <p>Получаешь стартовый капитал для развития экономики и бизнеса.</p>
+                        <h4 data-translate="benefits.3.title">3. Стартовый бонус</h4>
+                        <p data-translate="benefits.3.description">Получаешь стартовый капитал для развития экономики и бизнеса.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <h4>4. Unique Role & Tag</h4>
-                        <p>Уникальная роль @ᴀꜱᴛʀᴀ и особый цвет ника, заметный всем.</p>
+                        <h4 data-translate="benefits.4.title">4. Уникальная роль и тег</h4>
+                        <p data-translate="benefits.4.description">Уникальная роль @ᴀꜱᴛʀᴀ и особый цвет ника, заметный всем.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <h4>5. Monthly Mystery Gift</h4>
-                        <p>Каждый месяц — случайный бонус: деньги, ресурсы, кейсы или редкий предмет.</p>
+                        <h4 data-translate="benefits.5.title">5. Ежемесячный загадочный подарок</h4>
+                        <p data-translate="benefits.5.description">Каждый месяц — случайный бонус: деньги, ресурсы, кейсы или редкий предмет.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-microphone-alt"></i>
-                        </div>
-                        <h4>6. Voice Priority</h4>
-                        <p>Приоритет в голосовых каналах — твой голос слышен первым.</p>
+                        <h4 data-translate="benefits.6.title">6. Приоритет в голосовых каналах</h4>
+                        <p data-translate="benefits.6.description">Приоритет в голосовых каналах — твой голос слышен первым.</p>
                     </div>
                     
                     <div class="benefit-card">
-                        <div class="benefit-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h4>7. Booster Reward</h4>
-                        <p>Получай игровую валюту через команду !collect.</p>
+                        <h4 data-translate="benefits.7.title">7. Награда за буст</h4>
+                        <p data-translate="benefits.7.description">Получай игровую валюту через команду !collect.</p>
                     </div>
                 </div>
             </section>
@@ -1082,75 +1362,82 @@
 
         <!-- Страница подписки -->
         <div class="page" id="donate-page">
-            <h2><i class="fas fa-crown"></i> Выберите тариф премиум подписки</h2>
+            <h2 data-translate="donate.title" style="font-size: 2.2rem; margin-bottom: 30px; text-align: center; color: var(--accent-cyan);">
+                <i class="fas fa-crown"></i> Выберите тариф премиум подписки
+            </h2>
             <div class="donation-tiers">
-                <div class="tier-card" data-tier="astra-2weeks" data-price="1">
+                <!-- Тариф 2 недели -->
+                <div class="tier-card" data-tier="astra-2weeks" data-price="1" onclick="selectTier(this, 'astra-2weeks', 'Astra 2 недели', '1$')">
                     <div class="tier-icon">
                         <i class="fas fa-star"></i>
                     </div>
                     <h3>Astra</h3>
-                    <div class="tier-duration">2 недели</div>
+                    <div class="tier-duration" data-translate="donate.weeks2">2 недели</div>
                     <div class="tier-price">1$</div>
                     <ul class="tier-features">
-                        <li>Priority Support</li>
-                        <li>Early Access</li>
-                        <li>Starting Bonus</li>
-                        <li>Unique Role & Tag</li>
-                        <li>Voice Priority</li>
+                        <li data-translate="donate.features.1">Приоритетная поддержка</li>
+                        <li data-translate="donate.features.2">Ранний доступ</li>
+                        <li data-translate="donate.features.3">Стартовый бонус</li>
+                        <li data-translate="donate.features.4">Уникальная роль и тег</li>
+                        <li data-translate="donate.features.5">Приоритет в голосовых каналах</li>
                     </ul>
-                    <button class="btn btn-tier" onclick="selectTier('astra-2weeks', 'Astra 2 недели', '1$')">
-                        <i class="fas fa-shopping-cart"></i> Выбрать этот план
+                    <button class="btn btn-tier">
+                        <i class="fas fa-shopping-cart"></i> <span data-translate="donate.select">Выбрать этот план</span>
                     </button>
                 </div>
                 
-                <div class="tier-card popular" data-tier="astra-1month" data-price="2.50">
-                    <div class="popular-badge">ПОПУЛЯРНЫЙ</div>
+                <!-- Тариф 1 месяц -->
+                <div class="tier-card popular" data-tier="astra-1month" data-price="2.50" onclick="selectTier(this, 'astra-1month', 'Astra 1 месяц', '2.50$')">
+                    <div class="popular-badge" data-translate="donate.popular">ПОПУЛЯРНЫЙ</div>
                     <div class="tier-icon">
                         <i class="fas fa-gem"></i>
                     </div>
                     <h3>Astra</h3>
-                    <div class="tier-duration">1 месяц</div>
+                    <div class="tier-duration" data-translate="donate.month1">1 месяц</div>
                     <div class="tier-price">2.50$</div>
                     <ul class="tier-features">
-                        <li>Все преимущества 2-недельного плана</li>
-                        <li>Monthly Mystery Gift</li>
-                        <li>Booster Reward</li>
-                        <li>Расширенный стартовый бонус</li>
-                        <li>Дополнительные привилегии</li>
+                        <li data-translate="donate.features.all">Все преимущества 2-недельного плана</li>
+                        <li data-translate="donate.features.6">Ежемесячный загадочный подарок</li>
+                        <li data-translate="donate.features.7">Награда за буст</li>
+                        <li data-translate="donate.features.8">Расширенный стартовый бонус</li>
+                        <li data-translate="donate.features.9">Дополнительные привилегии</li>
                     </ul>
-                    <button class="btn btn-tier" onclick="selectTier('astra-1month', 'Astra 1 месяц', '2.50$')">
-                        <i class="fas fa-crown"></i> Выбрать этот план
+                    <button class="btn btn-tier">
+                        <i class="fas fa-crown"></i> <span data-translate="donate.select">Выбрать этот план</span>
                     </button>
                 </div>
                 
-                <div class="tier-card" data-tier="astra-3months" data-price="4.99">
+                <!-- Тариф 3 месяца -->
+                <div class="tier-card" data-tier="astra-3months" data-price="4.99" onclick="selectTier(this, 'astra-3months', 'Astra 3 месяца', '4.99$')">
                     <div class="tier-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
                     <h3>Astra</h3>
-                    <div class="tier-duration">3 месяца</div>
+                    <div class="tier-duration" data-translate="donate.months3">3 месяца</div>
                     <div class="tier-price">4.99$</div>
                     <ul class="tier-features">
-                        <li>Все преимущества месячного плана</li>
-                        <li>Экономия 33%</li>
-                        <li>Эксклюзивный VIP-статус</li>
-                        <li>Персональный менеджер</li>
-                        <li>Участие в закрытых событиях</li>
-                        <li>Особые награды каждый месяц</li>
+                        <li data-translate="donate.features.all">Все преимущества месячного плана</li>
+                        <li data-translate="donate.features.10">Экономия 33%</li>
+                        <li data-translate="donate.features.11">Эксклюзивный VIP-статус</li>
+                        <li data-translate="donate.features.12">Персональный менеджер</li>
+                        <li data-translate="donate.features.13">Участие в закрытых событиях</li>
+                        <li data-translate="donate.features.14">Особые награды каждый месяц</li>
                     </ul>
-                    <button class="btn btn-tier" onclick="selectTier('astra-3months', 'Astra 3 месяца', '4.99$')">
-                        <i class="fas fa-bolt"></i> Выбрать этот план
+                    <button class="btn btn-tier">
+                        <i class="fas fa-bolt"></i> <span data-translate="donate.select">Выбрать этот план</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Выбор способа оплаты -->
-            <section class="payment-section">
-                <h2><i class="fas fa-credit-card"></i> Выберите способ оплаты</h2>
+            <!-- Выбор оплаты -->
+            <section class="payment-section" id="payment-section">
+                <h2 data-translate="payment.title" style="font-size: 2.2rem; margin-bottom: 30px; text-align: center; color: var(--accent-cyan);">
+                    <i class="fas fa-credit-card"></i> Выберите способ оплаты
+                </h2>
                 
                 <div class="selected-tier-info" id="selectedTierInfo">
-                    <h3><i class="fas fa-check-circle"></i> Выбран тариф: <span id="selectedTierName">-</span></h3>
-                    <p>Сумма к оплате: <strong id="selectedTierPrice">-</strong></p>
+                    <h3><i class="fas fa-check-circle"></i> <span data-translate="payment.selected">Выбран тариф:</span> <span id="selectedTierName">-</span></h3>
+                    <p><span data-translate="payment.amount">Сумма к оплате:</span> <strong id="selectedTierPrice">-</strong></p>
                 </div>
                 
                 <div class="payment-options">
@@ -1168,10 +1455,10 @@
                             </div>
                         </div>
                         <h3>Boosty</h3>
-                        <p>Для пользователей из России и стран СНГ. Оплата в рублях через карты, YooMoney, QIWI и другие популярные способы.</p>
+                        <p data-translate="payment.boosty">Для пользователей из России и стран СНГ. Оплата в рублях через карты, YooMoney, QIWI и другие популярные способы.</p>
                         <div class="security-note">
                             <i class="fas fa-lock"></i>
-                            <span>Безопасная оплата через Boosty</span>
+                            <span data-translate="payment.secure">Безопасная оплата через Boosty</span>
                         </div>
                     </div>
                     
@@ -1180,16 +1467,16 @@
                             <i class="fas fa-hryvnia"></i>
                         </div>
                         <h3>Monobank</h3>
-                        <p>Для пользователей из Украины. Оплата в гривнах через карты Monobank, ПриватБанк и другие украинские банки. Также доступна оплата через Google Pay и Apple Pay.</p>
+                        <p data-translate="payment.monobank">Для пользователей из Украины. Оплата в гривнах через карты Monobank, ПриватБанк и другие украинские банки.</p>
                         <div class="security-note">
                             <i class="fas fa-lock"></i>
-                            <span>Безопасная оплата через Monobank</span>
+                            <span data-translate="payment.secure">Безопасная оплата через Monobank</span>
                         </div>
                     </div>
                 </div>
                 
                 <div style="text-align: center; margin-top: 40px;">
-                    <button id="payButton" class="btn pay-btn" onclick="processPayment()">
+                    <button id="payButton" class="btn pay-btn" onclick="processPayment()" data-translate="payment.button">
                         <i class="fas fa-external-link-alt"></i> Перейти к оплате
                     </button>
                 </div>
@@ -1199,8 +1486,10 @@
         <!-- Страница социальных сетей -->
         <div class="page" id="social-page">
             <section class="social-section">
-                <h2><i class="fas fa-users"></i> Присоединяйтесь к нашему сообществу</h2>
-                <p style="font-size: 1.2rem; color: #a5d8ff; max-width: 700px; margin: 0 auto 30px;">
+                <h2 data-translate="social.title" style="font-size: 2.2rem; margin-bottom: 20px; color: var(--accent-cyan);">
+                    <i class="fas fa-users"></i> Присоединяйтесь к нашему сообществу
+                </h2>
+                <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 30px;" data-translate="social.description">
                     Следите за нашими обновлениями, участвуйте в событиях и общайтесь с другими игроками!
                 </p>
                 
@@ -1208,19 +1497,19 @@
                     <a href="https://discord.gg/aw3cV2rfUr" target="_blank" class="social-card discord">
                         <i class="fab fa-discord social-icon"></i>
                         <h3>Discord</h3>
-                        <p>Присоединяйтесь к нашему Discord серверу</p>
+                        <p data-translate="social.discord">Присоединяйтесь к нашему Discord серверу</p>
                     </a>
                     
                     <a href="https://t.me/worldcountryff" target="_blank" class="social-card telegram">
                         <i class="fab fa-telegram social-icon"></i>
                         <h3>Telegram</h3>
-                        <p>Подписывайтесь на наш Telegram канал</p>
+                        <p data-translate="social.telegram">Подписывайтесь на наш Telegram канал</p>
                     </a>
                     
                     <a href="https://www.tiktok.com/@worldcountry_ff?is_from_webapp=1&sender_device=pc" target="_blank" class="social-card tiktok">
                         <i class="fab fa-tiktok social-icon"></i>
                         <h3>TikTok</h3>
-                        <p>Следите за нами в TikTok</p>
+                        <p data-translate="social.tiktok">Следите за нами в TikTok</p>
                     </a>
                 </div>
             </section>
@@ -1229,13 +1518,14 @@
         <!-- Футер -->
         <footer>
             <div class="copyright">
-                <p>© 2023 - <span id="currentYear"></span> World | Земля. Все права защищены.</p>
+                <p>© 2023 - <span id="currentYear"></span> World | Земля</p>
             </div>
             
             <div class="site-info">
-                <p><i class="fas fa-info-circle"></i> Сайт работает с 2023 года и продолжает развиваться. Все платежи защищены и обрабатываются через безопасные платежные системы. 
-                Контент предоставляется в соответствии с условиями использования. Любое копирование материалов запрещено без письменного разрешения.</p>
-                <p style="margin-top: 10px; color: #4ade80;">
+                <p data-translate="footer.info">
+                    <i class="fas fa-info-circle"></i> Сайт работает с 2023 года и продолжает развиваться. Все платежи защищены и обрабатываются через безопасные платежные системы.
+                </p>
+                <p style="margin-top: 10px;" data-translate="footer.security">
                     <i class="fas fa-shield-alt"></i> Мы гарантируем безопасность всех транзакций и защиту ваших данных
                 </p>
             </div>
@@ -1254,7 +1544,7 @@
             
             <div class="security-note">
                 <i class="fas fa-shield-check"></i>
-                <span>Все платежи защищены SSL-шифрованием</span>
+                <span data-translate="footer.ssl">Все платежи защищены SSL-шифрованием</span>
             </div>
         </footer>
     </div>
@@ -1263,68 +1553,511 @@
         // Текущий год для футера
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Переменные для хранения состояния
+        // Переменные
         let selectedTier = null;
         let selectedPayment = null;
-        let originalPrice = 0;
+        let currentLanguage = 'ru';
+        let currentTheme = 'dark';
         
-        // Ссылки для оплаты
+        // Ссылки оплаты
         const paymentLinks = {
-            'boosty': 'https://boosty.to/world_zemlya',
+            'boosty': 'https://boosty.to/krendel0',
             'monobank': 'https://send.monobank.ua/jar/xNTSjFhns'
         };
 
-        // Функция отображения страницы
+        // Словари переводов
+        const translations = {
+            ru: {
+                'settings': 'Настройки',
+                'theme': 'Тема оформления',
+                'theme.dark': 'Темная',
+                'theme.light': 'Светлая',
+                'theme.gray': 'Серая',
+                'language': 'Язык',
+                'language.ru': 'Русский',
+                'language.uk': 'Украинский',
+                'language.en': 'Английский',
+                'language.kz': 'Казахский',
+                'language.by': 'Белорусский',
+                'nav.home': 'Главная',
+                'nav.donate': 'Подписка',
+                'nav.social': 'Сообщество',
+                'server.name': 'World | Земля',
+                'server.description': '🌍 World | Земля - Сервер в жанре "ВПИ", с адекватной администрацией, индивидуальный стиль, и идея. Мы тебя ждем!! ✨',
+                'benefits.title': 'Преимущества премиум подписки Astra',
+                'benefits.1.title': '1. Приоритетная поддержка',
+                'benefits.1.description': 'Моментальные ответы от персонала — твои обращения всегда в приоритете.',
+                'benefits.2.title': '2. Ранний доступ',
+                'benefits.2.description': 'После вайпа именно ты первым выбираешь страну и начинаешь путь к вершине.',
+                'benefits.3.title': '3. Стартовый бонус',
+                'benefits.3.description': 'Получаешь стартовый капитал для развития экономики и бизнеса.',
+                'benefits.4.title': '4. Уникальная роль и тег',
+                'benefits.4.description': 'Уникальная роль @ᴀꜱᴛʀᴀ и особый цвет ника, заметный всем.',
+                'benefits.5.title': '5. Ежемесячный загадочный подарок',
+                'benefits.5.description': 'Каждый месяц — случайный бонус: деньги, ресурсы, кейсы или редкий предмет.',
+                'benefits.6.title': '6. Приоритет в голосовых каналах',
+                'benefits.6.description': 'Приоритет в голосовых каналах — твой голос слышен первым.',
+                'benefits.7.title': '7. Награда за буст',
+                'benefits.7.description': 'Получай игровую валюту через команду !collect.',
+                'donate.title': 'Выберите тариф премиум подписки',
+                'donate.weeks2': '2 недели',
+                'donate.month1': '1 месяц',
+                'donate.months3': '3 месяца',
+                'donate.popular': 'ПОПУЛЯРНЫЙ',
+                'donate.select': 'Выбрать этот план',
+                'donate.features.1': 'Приоритетная поддержка',
+                'donate.features.2': 'Ранний доступ',
+                'donate.features.3': 'Стартовый бонус',
+                'donate.features.4': 'Уникальная роль и тег',
+                'donate.features.5': 'Приоритет в голосовых каналах',
+                'donate.features.all': 'Все преимущества 2-недельного плана',
+                'donate.features.6': 'Ежемесячный загадочный подарок',
+                'donate.features.7': 'Награда за буст',
+                'donate.features.8': 'Расширенный стартовый бонус',
+                'donate.features.9': 'Дополнительные привилегии',
+                'donate.features.10': 'Экономия 33%',
+                'donate.features.11': 'Эксклюзивный VIP-статус',
+                'donate.features.12': 'Персональный менеджер',
+                'donate.features.13': 'Участие в закрытых событиях',
+                'donate.features.14': 'Особые награды каждый месяц',
+                'payment.title': 'Выберите способ оплаты',
+                'payment.selected': 'Выбран тариф:',
+                'payment.amount': 'Сумма к оплате:',
+                'payment.boosty': 'Для пользователей из России и стран СНГ. Оплата в рублях через карты, YooMoney, QIWI и другие популярные способы.',
+                'payment.monobank': 'Для пользователей из Украины. Оплата в гривнах через карты Monobank, ПриватБанк и другие украинские банки.',
+                'payment.secure': 'Безопасная оплата',
+                'payment.button': 'Перейти к оплате',
+                'social.title': 'Присоединяйтесь к нашему сообществу',
+                'social.description': 'Следите за нашими обновлениями, участвуйте в событиях и общайтесь с другими игроками!',
+                'social.discord': 'Присоединяйтесь к нашему Discord серверу',
+                'social.telegram': 'Подписывайтесь на наш Telegram канал',
+                'social.tiktok': 'Следите за нами в TikTok',
+                'footer.info': 'Сайт работает с 2023 года и продолжает развиваться. Все платежи защищены и обрабатываются через безопасные платежные системы.',
+                'footer.security': 'Мы гарантируем безопасность всех транзакций и защиту ваших данных',
+                'footer.ssl': 'Все платежи защищены SSL-шифрованием'
+            },
+            
+            uk: {
+                'settings': 'Налаштування',
+                'theme': 'Тема оформлення',
+                'theme.dark': 'Темна',
+                'theme.light': 'Світла',
+                'theme.gray': 'Сіра',
+                'language': 'Мова',
+                'language.ru': 'Російська',
+                'language.uk': 'Українська',
+                'language.en': 'Англійська',
+                'language.kz': 'Казахська',
+                'language.by': 'Білоруська',
+                'nav.home': 'Головна',
+                'nav.donate': 'Підписка',
+                'nav.social': 'Спільнота',
+                'server.name': 'World | Земля',
+                'server.description': '🌍 World | Земля - Сервер у жанрі "ВПІ", з адекватною адміністрацією, індивідуальним стилем та ідеєю. Ми чекаємо на тебе!! ✨',
+                'benefits.title': 'Переваги преміум підписки Astra',
+                'benefits.1.title': '1. Пріоритетна підтримка',
+                'benefits.1.description': 'Миттєві відповіді від персоналу — твої звернення завжди в пріоритеті.',
+                'benefits.2.title': '2. Ранній доступ',
+                'benefits.2.description': 'Після вайпу саме ти першим обираєш країну та починаєш шлях до вершини.',
+                'benefits.3.title': '3. Стартовий бонус',
+                'benefits.3.description': 'Отримуєш стартовий капітал для розвитку економіки та бізнесу.',
+                'benefits.4.title': '4. Унікальна роль та тег',
+                'benefits.4.description': 'Унікальна роль @ᴀꜱᴛʀᴀ та особливий колір ніку, помітний усім.',
+                'benefits.5.title': '5. Щомісячний таємничий подарунок',
+                'benefits.5.description': 'Щомісяця — випадковий бонус: гроші, ресурси, кейси або рідкісний предмет.',
+                'benefits.6.title': '6. Пріоритет у голосових каналах',
+                'benefits.6.description': 'Пріоритет у голосових каналах — твій голос чутний першим.',
+                'benefits.7.title': '7. Винагорода за буст',
+                'benefits.7.description': 'Отримуй ігрову валюту через команду !collect.',
+                'donate.title': 'Оберіть тариф преміум підписки',
+                'donate.weeks2': '2 тижні',
+                'donate.month1': '1 місяць',
+                'donate.months3': '3 місяці',
+                'donate.popular': 'ПОПУЛЯРНИЙ',
+                'donate.select': 'Обрати цей план',
+                'donate.features.1': 'Пріоритетна підтримка',
+                'donate.features.2': 'Ранній доступ',
+                'donate.features.3': 'Стартовий бонус',
+                'donate.features.4': 'Унікальна роль та тег',
+                'donate.features.5': 'Пріоритет у голосових каналах',
+                'donate.features.all': 'Усі переваги 2-тижневого плану',
+                'donate.features.6': 'Щомісячний таємничий подарунок',
+                'donate.features.7': 'Винагорода за буст',
+                'donate.features.8': 'Розширений стартовий бонус',
+                'donate.features.9': 'Додаткові привілеї',
+                'donate.features.10': 'Економія 33%',
+                'donate.features.11': 'Ексклюзивний VIP-статус',
+                'donate.features.12': 'Персональний менеджер',
+                'donate.features.13': 'Участь у закритих подіях',
+                'donate.features.14': 'Особливі нагороди щомісяця',
+                'payment.title': 'Оберіть спосіб оплати',
+                'payment.selected': 'Обрано тариф:',
+                'payment.amount': 'Сума до оплати:',
+                'payment.boosty': 'Для користувачів з Росії та країн СНД. Оплата в рублях через картки, YooMoney, QIWI та інші популярні способи.',
+                'payment.monobank': 'Для користувачів з України. Оплата в гривнях через картки Monobank, ПриватБанк та інші українські банки.',
+                'payment.secure': 'Безпечна оплата',
+                'payment.button': 'Перейти до оплати',
+                'social.title': 'Приєднуйтесь до нашої спільноти',
+                'social.description': 'Слідкуйте за нашими оновленнями, беріть участь у подіях та спілкуйтесь з іншими гравцями!',
+                'social.discord': 'Приєднуйтесь до нашого Discord сервера',
+                'social.telegram': 'Підписуйтесь на наш Telegram канал',
+                'social.tiktok': 'Слідкуйте за нами в TikTok',
+                'footer.info': 'Сайт працює з 2023 року та продовжує розвиватися. Усі платежі захищені та обробляються через безпечні платіжні системи.',
+                'footer.security': 'Ми гарантуємо безпеку всіх транзакцій та захист ваших даних',
+                'footer.ssl': 'Усі платежі захищені SSL-шифруванням'
+            },
+            
+            en: {
+                'settings': 'Settings',
+                'theme': 'Theme',
+                'theme.dark': 'Dark',
+                'theme.light': 'Light',
+                'theme.gray': 'Gray',
+                'language': 'Language',
+                'language.ru': 'Russian',
+                'language.uk': 'Ukrainian',
+                'language.en': 'English',
+                'language.kz': 'Kazakh',
+                'language.by': 'Belarusian',
+                'nav.home': 'Home',
+                'nav.donate': 'Subscription',
+                'nav.social': 'Community',
+                'server.name': 'World | Earth',
+                'server.description': '🌍 World | Earth - Server in the "VPI" genre, with adequate administration, individual style, and idea. We are waiting for you!! ✨',
+                'benefits.title': 'Astra Premium Subscription Benefits',
+                'benefits.1.title': '1. Priority Support',
+                'benefits.1.description': 'Instant responses from staff — your requests are always prioritized.',
+                'benefits.2.title': '2. Early Access',
+                'benefits.2.description': 'After wipe, you are the first to choose a country and start your path to the top.',
+                'benefits.3.title': '3. Starting Bonus',
+                'benefits.3.description': 'Receive starting capital for economic and business development.',
+                'benefits.4.title': '4. Unique Role & Tag',
+                'benefits.4.description': 'Unique @ᴀꜱᴛʀᴀ role and special nickname color visible to everyone.',
+                'benefits.5.title': '5. Monthly Mystery Gift',
+                'benefits.5.description': 'Every month — random bonus: money, resources, cases or rare item.',
+                'benefits.6.title': '6. Voice Priority',
+                'benefits.6.description': 'Priority in voice channels — your voice is heard first.',
+                'benefits.7.title': '7. Booster Reward',
+                'benefits.7.description': 'Receive in-game currency via !collect command.',
+                'donate.title': 'Choose Premium Subscription Plan',
+                'donate.weeks2': '2 weeks',
+                'donate.month1': '1 month',
+                'donate.months3': '3 months',
+                'donate.popular': 'POPULAR',
+                'donate.select': 'Select This Plan',
+                'donate.features.1': 'Priority Support',
+                'donate.features.2': 'Early Access',
+                'donate.features.3': 'Starting Bonus',
+                'donate.features.4': 'Unique Role & Tag',
+                'donate.features.5': 'Voice Priority',
+                'donate.features.all': 'All features of 2-week plan',
+                'donate.features.6': 'Monthly Mystery Gift',
+                'donate.features.7': 'Booster Reward',
+                'donate.features.8': 'Extended Starting Bonus',
+                'donate.features.9': 'Additional Privileges',
+                'donate.features.10': 'Save 33%',
+                'donate.features.11': 'Exclusive VIP Status',
+                'donate.features.12': 'Personal Manager',
+                'donate.features.13': 'Participation in Closed Events',
+                'donate.features.14': 'Special Rewards Every Month',
+                'payment.title': 'Choose Payment Method',
+                'payment.selected': 'Selected Plan:',
+                'payment.amount': 'Amount to Pay:',
+                'payment.boosty': 'For users from Russia and CIS countries. Payment in rubles via cards, YooMoney, QIWI and other popular methods.',
+                'payment.monobank': 'For users from Ukraine. Payment in hryvnias via Monobank, PrivatBank and other Ukrainian banks.',
+                'payment.secure': 'Secure Payment',
+                'payment.button': 'Proceed to Payment',
+                'social.title': 'Join Our Community',
+                'social.description': 'Follow our updates, participate in events and chat with other players!',
+                'social.discord': 'Join our Discord server',
+                'social.telegram': 'Subscribe to our Telegram channel',
+                'social.tiktok': 'Follow us on TikTok',
+                'footer.info': 'The site has been operating since 2023 and continues to develop. All payments are protected and processed through secure payment systems.',
+                'footer.security': 'We guarantee the security of all transactions and protection of your data',
+                'footer.ssl': 'All payments are protected by SSL encryption'
+            },
+            
+            kz: {
+                'settings': 'Параметрлер',
+                'theme': 'Тақырып',
+                'theme.dark': 'Қараңғы',
+                'theme.light': 'Ашық',
+                'theme.gray': 'Сұр',
+                'language': 'Тіл',
+                'language.ru': 'Орысша',
+                'language.uk': 'Украин',
+                'language.en': 'Ағылшын',
+                'language.kz': 'Қазақша',
+                'language.by': 'Беларус',
+                'nav.home': 'Басты бет',
+                'nav.donate': 'Жазылым',
+                'nav.social': 'Қауымдастық',
+                'server.name': 'World | Жер',
+                'server.description': '🌍 World | Жер - "ВПИ" жанрындағы сервер, жеткілікті әкімшілікпен, жеке стильмен және идеямен. Біз сені күтеміз!! ✨',
+                'benefits.title': 'Astra премиум жазылым артықшылықтары',
+                'benefits.1.title': '1. Басым қолдау',
+                'benefits.1.description': 'Қызметкерлерден лезде жауаптар — сіздің сұрауларыңыз әрқашан басымдыққа ие.',
+                'benefits.2.title': '2. Ерте қол жеткізу',
+                'benefits.2.description': 'Вайте кейін дәл сіз бірінші елді таңдап, шыңға жол саласыз.',
+                'benefits.3.title': '3. Бастапқы бонус',
+                'benefits.3.description': 'Экономиканы және бизнесті дамыту үшін бастапқы капитал алыңыз.',
+                'benefits.4.title': '4. Бірегей роль және тег',
+                'benefits.4.description': '@ᴀꜱᴛʀᴀ бірегей рөлі және барлыққа көрінетін арнайы лақап атының түсі.',
+                'benefits.5.title': '5. Ай сайынғы жұмбақ сыйлық',
+                'benefits.5.description': 'Әр айда — кездейсоқ бонус: ақша, ресурстар, кейстер немесе сирек зат.',
+                'benefits.6.title': '6. Дауыстық арналарда басымдық',
+                'benefits.6.description': 'Дауыстық арналарда басымдық — сіздің дауысыңыз бірінші естіледі.',
+                'benefits.7.title': '7. Буст үшін сыйлық',
+                'benefits.7.description': '!collect командасы арқылы ойын валютасын алыңыз.',
+                'donate.title': 'Премиум жазылым тарифін таңдаңыз',
+                'donate.weeks2': '2 апта',
+                'donate.month1': '1 ай',
+                'donate.months3': '3 ай',
+                'donate.popular': 'ТАНЫМАЛ',
+                'donate.select': 'Бұл жоспарды таңдау',
+                'donate.features.1': 'Басым қолдау',
+                'donate.features.2': 'Ерте қол жеткізу',
+                'donate.features.3': 'Бастапқы бонус',
+                'donate.features.4': 'Бірегей роль және тег',
+                'donate.features.5': 'Дауыстық арналарда басымдық',
+                'donate.features.all': '2 апталық жоспардың барлық ерекшеліктері',
+                'donate.features.6': 'Ай сайынғы жұмбақ сыйлық',
+                'donate.features.7': 'Буст үшін сыйлық',
+                'donate.features.8': 'Кеңейтілген бастапқы бонус',
+                'donate.features.9': 'Қосымша жеңілдіктер',
+                'donate.features.10': '33% үнемдеу',
+                'donate.features.11': 'Эксклюзивті VIP мәртебе',
+                'donate.features.12': 'Жеке менеджер',
+                'donate.features.13': 'Жабық іс-шараларға қатысу',
+                'donate.features.14': 'Әр айда арнайы сыйлықтар',
+                'payment.title': 'Төлем әдісін таңдаңыз',
+                'payment.selected': 'Таңдалған тариф:',
+                'payment.amount': 'Төлем сомасы:',
+                'payment.boosty': 'Ресей мен ТМД елдерінің қолданушылары үшін. Карталар, YooMoney, QIWI және басқа танымал әдістер арқылы рубльмен төлеу.',
+                'payment.monobank': 'Украинаның қолданушылары үшін. Monobank, ПриватБанк және басқа украиналық банктердің карталары арқылы гривнамен төлеу.',
+                'payment.secure': 'Қауіпсіз төлем',
+                'payment.button': 'Төлемге өту',
+                'social.title': 'Біздің қауымдастыққа қосылыңыз',
+                'social.description': 'Біздің жаңартуларды қадағалаңыз, іс-шараларға қатысыңыз және басқа ойыншылармен сөйлесіңіз!',
+                'social.discord': 'Біздің Discord серверімізге қосылыңыз',
+                'social.telegram': 'Біздің Telegram арнамызға жазылыңыз',
+                'social.tiktok': 'Бізді TikTok-та қадағалаңыз',
+                'footer.info': 'Сайт 2023 жылдан бастап жұмыс істейді және дамуын жалғастыруда. Барлық төлемдер қорғалған және қауіпсіз төлем жүйелері арқылы өңделеді.',
+                'footer.security': 'Біз барлық транзакциялардың қауіпсіздігін және деректеріңіздің қорғалуын кепілдейміз',
+                'footer.ssl': 'Барлық төлемдер SSL шифрлау арқылы қорғалған'
+            },
+            
+            by: {
+                'settings': 'Наладкі',
+                'theme': 'Тэма афармлення',
+                'theme.dark': 'Цёмная',
+                'theme.light': 'Светлая',
+                'theme.gray': 'Шэрая',
+                'language': 'Мова',
+                'language.ru': 'Руская',
+                'language.uk': 'Украінская',
+                'language.en': 'Англійская',
+                'language.kz': 'Казахская',
+                'language.by': 'Беларуская',
+                'nav.home': 'Галоўная',
+                'nav.donate': 'Падпіска',
+                'nav.social': 'Суполка',
+                'server.name': 'World | Зямля',
+                'server.description': '🌍 World | Зямля - Сервер у жанры "ВПІ", з адэкватнай адміністрацыяй, індывідуальным стылем і ідэяй. Мы чакаем цябе!! ✨',
+                'benefits.title': 'Перавагі прэміум падпіскі Astra',
+                'benefits.1.title': '1. Прыярытэтная падтрымка',
+                'benefits.1.description': 'Імгненныя адказы ад персаналу — твае звароты заўсёды ў прыярытэце.',
+                'benefits.2.title': '2. Ранні доступ',
+                'benefits.2.description': 'Пасля вайпу менавіта ты першым выбіраеш краіну і пачынаеш шлях да вяршыні.',
+                'benefits.3.title': '3. Стартавы бонус',
+                'benefits.3.description': 'Атрымліваеш стартавы капітал для развіцця эканомікі і бізнесу.',
+                'benefits.4.title': '4. Унікальная роля і тэг',
+                'benefits.4.description': 'Унікальная роля @ᴀꜱᴛʀᴀ і асаблівы колер ніку, прыкметны ўсім.',
+                'benefits.5.title': '5. Штомесячны таямнічы падарунак',
+                'benefits.5.description': 'Кожны месяц — выпадковы бонус: грошы, рэсурсы, кейсы або рэдкі прадмет.',
+                'benefits.6.title': '6. Прыярытэт у галасавых каналах',
+                'benefits.6.description': 'Прыярытэт у галасавых каналах — твой голас чуцен першым.',
+                'benefits.7.title': '7. Узнагарода за буст',
+                'benefits.7.description': 'Атрымлівай гульнявую валюту праз каманду !collect.',
+                'donate.title': 'Абярыце тарыф прэміум падпіскі',
+                'donate.weeks2': '2 тыдні',
+                'donate.month1': '1 месяц',
+                'donate.months3': '3 месяцы',
+                'donate.popular': 'ПАПУЛЯРНЫ',
+                'donate.select': 'Абраць гэты план',
+                'donate.features.1': 'Прыярытэтная падтрымка',
+                'donate.features.2': 'Ранні доступ',
+                'donate.features.3': 'Стартавы бонус',
+                'donate.features.4': 'Унікальная роля і тэг',
+                'donate.features.5': 'Прыярытэт у галасавых каналах',
+                'donate.features.all': 'Усе перавагі 2-тыднёвага плану',
+                'donate.features.6': 'Штомесячны таямнічы падарунак',
+                'donate.features.7': 'Узнагарода за буст',
+                'donate.features.8': 'Пашыраны стартавы бонус',
+                'donate.features.9': 'Дадатковыя прывілеі',
+                'donate.features.10': 'Эканомія 33%',
+                'donate.features.11': 'Эксклюзіўны VIP-статус',
+                'donate.features.12': 'Персанальны менеджэр',
+                'donate.features.13': 'Удзел у закрытых мерапрыемствах',
+                'donate.features.14': 'Асаблівыя ўзнагароды кожны месяц',
+                'payment.title': 'Абярыце спосаб аплаты',
+                'payment.selected': 'Абраны тарыф:',
+                'payment.amount': 'Сума да аплаты:',
+                'payment.boosty': 'Для карыстальнікаў з Расіі і краін СНД. Аплата ў рублях праз карткі, YooMoney, QIWI і іншыя папулярныя спосабы.',
+                'payment.monobank': 'Для карыстальнікаў з Украіны. Аплата ў грыўнях праз карткі Monobank, ПрыватБанк і іншыя ўкраінскія банкі.',
+                'payment.secure': 'Бяспечная аплата',
+                'payment.button': 'Перайсці да аплаты',
+                'social.title': 'Далучайцеся да нашай суполкі',
+                'social.description': 'Сачыце за нашымі абнаўленнямі, удзельнічайце ў мерапрыемствах і размаўляйце з іншымі гульцамі!',
+                'social.discord': 'Далучайцеся да нашага Discord сервера',
+                'social.telegram': 'Падпісвайцеся на наш Telegram канал',
+                'social.tiktok': 'Сачыце за намі ў TikTok',
+                'footer.info': 'Сайт працуе з 2023 года і працягвае развівацца. Усе плацяжы абаронены і апрацоўваюцца праз бяспечныя плацежныя сістэмы.',
+                'footer.security': 'Мы гарантуем бяспеку ўсіх транзакцый і абарону вашых дадзеных',
+                'footer.ssl': 'Усе плацяжы абаронены SSL-шыфраваннем'
+            }
+        };
+
+        // Переводы для уведомлений
+        const notificationTranslations = {
+            ru: {
+                'tier_selected': 'Тариф выбран: ',
+                'select_tier_first': 'Сначала выберите тариф',
+                'select_payment_first': 'Выберите тариф и способ оплаты',
+                'redirecting': 'Переход к оплате...'
+            },
+            uk: {
+                'tier_selected': 'Тариф обрано: ',
+                'select_tier_first': 'Спочатку оберіть тариф',
+                'select_payment_first': 'Оберіть тариф та спосіб оплати',
+                'redirecting': 'Перехід до оплати...'
+            },
+            en: {
+                'tier_selected': 'Plan selected: ',
+                'select_tier_first': 'Select a plan first',
+                'select_payment_first': 'Select plan and payment method',
+                'redirecting': 'Redirecting to payment...'
+            },
+            kz: {
+                'tier_selected': 'Тариф таңдалды: ',
+                'select_tier_first': 'Алдымен тарифті таңдаңыз',
+                'select_payment_first': 'Тарифті және төлем әдісін таңдаңыз',
+                'redirecting': 'Төлемге өту...'
+            },
+            by: {
+                'tier_selected': 'Тарыф абраны: ',
+                'select_tier_first': 'Спачатку абярыце тарыф',
+                'select_payment_first': 'Абярыце тарыф і спосаб аплаты',
+                'redirecting': 'Пераход да аплаты...'
+            }
+        };
+
+        // Инициализация
+        function init() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            setTheme(savedTheme);
+            
+            const savedLang = localStorage.getItem('language') || 'ru';
+            setLanguage(savedLang);
+        }
+
+        // Переключение меню настроек
+        function toggleSettings() {
+            const menu = document.getElementById('settingsMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Установка темы
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.classList.contains('theme-' + theme)) {
+                    option.classList.add('active');
+                }
+            });
+        }
+
+        // Установка языка
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            
+            applyTranslations(lang);
+            
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.onclick && option.onclick.toString().includes(`'${lang}'`)) {
+                    option.classList.add('active');
+                }
+            });
+            
+            document.getElementById('settingsMenu').classList.remove('show');
+            
+            return false;
+        }
+
+        // Применить переводы
+        function applyTranslations(lang) {
+            const langData = translations[lang];
+            
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (langData[key]) {
+                    element.innerHTML = langData[key];
+                }
+            });
+        }
+
+        // Функции навигации
         function showPage(pageId) {
-            // Скрыть все страницы
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
-            // Показать выбранную страницу
-            const pageElement = document.getElementById(pageId + '-page');
-            pageElement.classList.add('active');
-            
-            // Прокрутить к началу страницы
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Обновить активную ссылку в навигации
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
+            
+            const pageElement = document.getElementById(pageId + '-page');
+            if (pageElement) {
+                pageElement.classList.add('active');
+            }
             
             const activeLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
             }
             
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             return false;
         }
 
-        // Функция выбора тарифа
-        function selectTier(tierId, tierName, tierPriceStr) {
+        // Выбор тарифа с автоматической прокруткой
+        function selectTier(element, tierId, tierName, tierPriceStr) {
+            document.querySelectorAll('.tier-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            
             selectedTier = { 
                 id: tierId, 
                 name: tierName, 
                 originalPrice: parseFloat(tierPriceStr.replace('$', ''))
             };
             
-            // Обновляем информацию о выбранном тарифе
             document.getElementById('selectedTierName').textContent = tierName;
-            originalPrice = selectedTier.originalPrice;
+            document.getElementById('selectedTierPrice').textContent = `${selectedTier.originalPrice}$`;
             
-            // Показываем только оригинальную цену
-            document.getElementById('selectedTierPrice').textContent = `${originalPrice}$`;
-            
-            // Показываем блок с информацией
             const tierInfo = document.getElementById('selectedTierInfo');
             tierInfo.classList.remove('show');
-            // Небольшая задержка для плавной анимации
-            setTimeout(() => {
-                tierInfo.classList.add('show');
-            }, 10);
+            setTimeout(() => tierInfo.classList.add('show'), 10);
             
-            // Сбрасываем выбор оплаты
             if (selectedPayment) {
                 document.querySelectorAll('.payment-card').forEach(card => {
                     card.classList.remove('selected');
@@ -1333,124 +2066,93 @@
                 document.getElementById('payButton').classList.remove('show');
             }
             
-            // Показать уведомление
-            showNotification(`Вы выбрали тариф: ${tierName} за ${tierPriceStr}`);
+            setTimeout(() => {
+                const paymentSection = document.getElementById('payment-section');
+                if (paymentSection) {
+                    paymentSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 300);
+            
+            showNotification(notificationTranslations[currentLanguage]['tier_selected'] + tierName, 'success');
         }
 
-        // Функция выбора способа оплаты
         function selectPayment(paymentMethod) {
             if (!selectedTier) {
-                showNotification('Сначала выберите тариф подписки!', 'error');
+                showNotification(notificationTranslations[currentLanguage]['select_tier_first'], 'error');
                 return;
             }
             
             selectedPayment = paymentMethod;
-            
-            // Снимаем выделение со всех карточек оплаты
             document.querySelectorAll('.payment-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Выделяем выбранную карточку
             event.currentTarget.classList.add('selected');
             
-            // Показываем кнопку оплаты
             const payButton = document.getElementById('payButton');
             payButton.classList.remove('show');
-            // Небольшая задержка для плавной анимации
-            setTimeout(() => {
-                payButton.classList.add('show');
-            }, 10);
-            
-            // Показываем уведомление
-            const methodName = paymentMethod === 'boosty' ? 'Boosty' : 'Monobank';
-            showNotification(`Выбран способ оплаты: ${methodName}`);
+            setTimeout(() => payButton.classList.add('show'), 10);
         }
 
-        // Функция обработки платежа
         function processPayment() {
             if (!selectedTier || !selectedPayment) {
-                showNotification('Пожалуйста, выберите тариф и способ оплаты!', 'error');
+                showNotification(notificationTranslations[currentLanguage]['select_payment_first'], 'error');
                 return;
             }
             
-            const methodName = selectedPayment === 'boosty' ? 'Boosty' : 'Monobank';
-            const priceToPay = originalPrice;
-            
-            // Показываем финальное сообщение
-            const message = `
-                <strong>Перенаправление на оплату...</strong><br><br>
-                Тариф: ${selectedTier.name}<br>
-                Сумма: ${priceToPay}$<br>
-                Способ оплаты: ${methodName}<br><br>
-                <span style="color: #4ade80;">Вы будете перенаправлены на страницу оплаты</span>
-            `;
-            
+            const message = notificationTranslations[currentLanguage]['redirecting'];
             showNotification(message, 'info', 3000);
             
-            // Перенаправление на реальную платежную систему
             setTimeout(() => {
                 if (paymentLinks[selectedPayment]) {
                     window.open(paymentLinks[selectedPayment], '_blank');
-                } else {
-                    showNotification('Ошибка: ссылка на оплату не найдена', 'error');
                 }
                 
-                // Сбрасываем выбор
                 selectedTier = null;
                 selectedPayment = null;
                 document.getElementById('selectedTierInfo').classList.remove('show');
                 document.getElementById('payButton').classList.remove('show');
+                
+                document.querySelectorAll('.tier-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                document.querySelectorAll('.payment-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
             }, 2000);
         }
 
-        // Функция показа уведомлений
         function showNotification(message, type = 'info', duration = 3000) {
-            // Создаем элемент уведомления
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.innerHTML = message;
-            
+            notification.textContent = message;
             document.body.appendChild(notification);
             
-            // Удаляем уведомление через указанное время
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease forwards';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
+                notification.remove();
             }, duration);
         }
 
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Добавляем плавные переходы для всех ссылок
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const href = this.getAttribute('href');
-                    if (href !== '#') {
-                        const targetElement = document.querySelector(href);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
-            });
+        // Закрыть меню настроек при клике вне его
+        document.addEventListener('click', (e) => {
+            const settingsMenu = document.getElementById('settingsMenu');
+            const controlBtn = document.querySelector('.control-btn');
             
-            // Исправление анимаций на мобильных устройствах
-            if ('ontouchstart' in window) {
-                // Отключаем hover-эффекты на мобильных
-                document.querySelectorAll('.tier-card, .payment-card, .social-card').forEach(card => {
-                    card.style.transition = 'transform 0.3s ease';
-                });
+            if (settingsMenu && controlBtn) {
+                if (!settingsMenu.contains(e.target) && !controlBtn.contains(e.target)) {
+                    settingsMenu.classList.remove('show');
+                }
             }
         });
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
